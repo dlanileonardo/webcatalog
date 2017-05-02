@@ -73,32 +73,6 @@ builder.build({
         y: 315,
       },
     },
-    afterPack: ({ appOutDir }) =>
-      new Promise((resolve, reject) => {
-        if (process.platform !== 'darwin') {
-          resolve();
-          return;
-        }
-
-        // Use alternative exec to allow launching multiple instance of WebCatalog
-        // https://github.com/webcatalog/webcatalog/issues/10
-        // Use this solution because it ensures notification will work.
-        const fakeExecPath = `${appOutDir}/WebCatalog.app/Contents/MacOS/WebCatalog`;
-        const realExecPath = `${appOutDir}/WebCatalog.app/Contents/MacOS/WebCatalog_Real`;
-
-        execFile('./build/generate_alt_exec.sh', [
-          fakeExecPath,
-          realExecPath,
-        ], (err, stdout) => {
-          console.log(stdout);
-          if (err) {
-            reject(err);
-            return;
-          }
-
-          resolve();
-        });
-      }),
   },
 })
 .then(() => {
